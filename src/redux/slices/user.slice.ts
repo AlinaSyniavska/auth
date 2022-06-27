@@ -5,7 +5,7 @@ import {userService} from "../../services";
 
 interface IState {
     users: IUser[],
-};
+}
 
 const initialState: IState = {
     users: [],
