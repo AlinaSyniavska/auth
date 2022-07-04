@@ -3,6 +3,7 @@ export interface IAuth {
         _id: string,
         name: string,
         email: string,
+        phone?: string,
         age: number,
     },
     access_token: string,

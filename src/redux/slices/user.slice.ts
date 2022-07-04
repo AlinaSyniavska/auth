@@ -5,10 +5,14 @@ import {userService} from "../../services";
 
 interface IState {
     users: IUser[],
+    formErrors: any,
+    registerError: boolean,
 }
 
 const initialState: IState = {
     users: [],
+    formErrors: {},
+    registerError: false,
 };
 
 const getAll = createAsyncThunk<IUser[], void>(
@@ -23,22 +27,24 @@ const getAll = createAsyncThunk<IUser[], void>(
     }
 );
 
-/*const getById = createAsyncThunk<IUser, { id: string }>(
-    'userSlice/getById',
-    async ({id},{rejectWithValue}) => {
+const registerUser = createAsyncThunk<IUser, { user: IUser }>(
+    'userSlice/registerUser',
+    async ({user},{rejectWithValue}) => {
         try {
-            const {data} = await userService.getById(id);
+            const {data} = await userService.create(user);
             return data;
         } catch (error: any) {
-            return rejectWithValue(error.response.data)
+            console.log(error);
+            return rejectWithValue({errorsFromDB: error.response.data});
         }
     }
-);*/
+);
+
 
 const userSlice = createSlice({
     name: 'userSlice',
     initialState,
-    reducers: {},
+    reducers: { },
     extraReducers: (builder) => {
         builder
             .addCase(getAll.fulfilled, (state, action) => {
@@ -48,6 +54,14 @@ const userSlice = createSlice({
                 const errors = action.payload as any;
                 console.log(errors);
             })
+            .addCase(registerUser.fulfilled, (state, action) => {
+                state.users.push(action.payload);
+            })
+            .addCase(registerUser.rejected, (state, action) => {
+                const {errorsFromDB} = action.payload as any;
+                state.registerError = true;
+                state.formErrors = errorsFromDB;
+            })
     },
 });
 
@@ -55,9 +69,10 @@ const {reducer: userReducer, actions: {}} = userSlice;
 
 const userActions = {
     getAll,
+    registerUser,
 };
 
 export {
-    userReducer,
     userActions,
+    userReducer,
 }

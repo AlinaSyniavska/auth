@@ -18,14 +18,13 @@ const initialState: IState = {
     authErrors: {}
 };
 
-const login = createAsyncThunk<IAuth, {user: ILogin}>(
+const login = createAsyncThunk<IAuth, { user: ILogin }>(
     'authSlice/login',
     async ({user}, {rejectWithValue}) => {
         try {
             const {data} = await authService.getTokens(user);
             return data;
-        }
-        catch (e: any) {
+        } catch (e: any) {
             return rejectWithValue({errorStatus: e.message, errorsFromForm: e.response.data});
         }
     }
@@ -50,10 +49,9 @@ const authSlice = createSlice({
             })
             .addCase(login.rejected, (state, action) => {
                 state.loginError = true;
-// TODO add login reject
-/*                const {errorStatus, errorsFromForm} = action.payload;
+                const {errorStatus, errorsFromForm} = action.payload as any;
                 state.authStatus = errorStatus;
-                state.authErrors = errorsFromForm;*/
+                state.authErrors = errorsFromForm;
             })
     }
 });

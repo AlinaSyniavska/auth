@@ -24,7 +24,7 @@ const AuthForm: FC = () => {
     }, [pathname])
 
     const submitForm = async (user: ILogin) => {
-        console.log(state);
+        const {location} = state as any;
 
         try {
             if (!isLogin) {
@@ -33,8 +33,7 @@ const AuthForm: FC = () => {
                 navigate('/login');
             } else {
                 await dispatch(authActions.login({user}));
-                // navigate(state?.pathname || '/', {replace: true});
-                navigate(pathname || '/', {replace: true});
+                navigate(location.pathname || '/', {replace: true});
             }
         } catch (e: any) {
             console.error(e.response);

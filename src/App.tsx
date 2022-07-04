@@ -2,7 +2,7 @@ import {FC} from "react";
 import {Navigate, Route, Routes} from "react-router-dom";
 
 import {MainLayout} from "./layouts";
-import {LoginPage, UserDetailsPage, UsersPage} from "./pages";
+import {LoginPage, RegisterPage, UserDetailsPage, UsersPage} from "./pages";
 import {useAppDispatch} from "./hooks";
 import {authActions} from "./redux";
 import { RequireAuth } from "./hoc";
@@ -25,7 +25,7 @@ const App: FC = () => {
                     <Route path={':id'} element={<UserDetailsPage/>}/>
                 </Route>
                 <Route path={'auth/login'} element={<LoginPage/>}/>
-                {/*<Route path={'auth/register'} element={<RegisterPage/>}/>*/}
+                <Route path={'auth/register'} element={<RegisterPage/>}/>
             </Route>
         </Routes>
     );

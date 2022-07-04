@@ -1,20 +1,21 @@
 import {FC, useEffect} from "react";
 import {AuthForm} from "../../components";
-import {useSearchParams} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 
 const LoginPage: FC = () => {
     const [query] = useSearchParams();
-
-    // localStorage.clear();
+    //TODO comment this clear
+    localStorage.clear();
 
     useEffect(()=>{
-        console.log('session end', !!query.get('ExpSession'));
+        // console.log('session end', !!query.get('ExpSession'));
     },[query])
 
     return (
         <div>
             <AuthForm/>
-            {/*<Link to={'/register'}>To Register</Link>*/}
+            <br/><hr/>
+            <Link to={'/auth/register'}>To Register</Link>
         </div>
     );
 };
