@@ -6,6 +6,7 @@ import {LoginPage, RegisterPage, UserDetailsPage, UsersPage} from "./pages";
 import {useAppDispatch} from "./hooks";
 import {authActions} from "./redux";
 import { RequireAuth } from "./hoc";
+import {LogoutPage} from "./pages/LogoutPage/LogoutPage";
 
 
 const App: FC = () => {
@@ -25,6 +26,7 @@ const App: FC = () => {
                     <Route path={':id'} element={<UserDetailsPage/>}/>
                 </Route>
                 <Route path={'auth/login'} element={<LoginPage/>}/>
+                <Route path={'auth/logout'} element={<LogoutPage/>}/>
                 <Route path={'auth/register'} element={<RegisterPage/>}/>
             </Route>
         </Routes>

@@ -24,17 +24,13 @@ const AuthForm: FC = () => {
     }, [pathname])
 
     const submitForm = async (user: ILogin) => {
-        const {location} = state as any;
+        // const {location} = state as any;
 
         try {
-            if (!isLogin) {
-                // TODO add create user
-                // await userService.create(user);
-                navigate('/login');
-            } else {
-                await dispatch(authActions.login({user}));
-                navigate(location.pathname || '/', {replace: true});
-            }
+            await dispatch(authActions.login({user}));
+            // navigate(location.pathname || '/', {replace: true});
+            navigate('/', {replace: true});
+
         } catch (e: any) {
             console.error(e.response);
             setErrors(e.response.data);

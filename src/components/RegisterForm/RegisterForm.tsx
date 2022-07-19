@@ -1,6 +1,6 @@
-import {FC, useState} from "react";
+import {FC, useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {joiResolver} from "@hookform/resolvers/joi";
 
 import {useAppDispatch, useAppSelector} from "../../hooks";
@@ -9,23 +9,51 @@ import {userValidator} from "../../validators";
 import {userActions} from "../../redux";
 
 const RegisterForm: FC = () => {
-    const {register, reset, handleSubmit, formState: {errors, isValid}} = useForm<IUser>({
+    const {register, reset, handleSubmit, setValue, formState: {errors, isValid}} = useForm<IUser>({
         resolver: joiResolver(userValidator),
         mode: 'onTouched'
     });
 
     const [errorsFromForm, setErrors] = useState<any>({});
+    const [isRegister, setIsRegister] = useState(false);
+    const {pathname} = useLocation();
 
     const navigate = useNavigate();
-    const {formErrors, registerError} = useAppSelector(state => state.userReducer);
+    const {formErrors, registerError, userForUpdate} = useAppSelector(state => state.userReducer);
     const dispatch = useAppDispatch();
 
+    useEffect(() => {
+        if (userForUpdate) {
+            const {name, age, phone, email} = userForUpdate;
+            setValue('name', name);
+            setValue('age', age);
+            setValue('phone', phone);
+            setValue('email', email);
+        }
+    }, [userForUpdate])
+
+    useEffect(() => {
+        pathname === '/auth/register' ? setIsRegister(true) : setIsRegister(false)
+    }, [pathname])
 
     const submitForm = async (user: IUser) => {
+        const updatedUser = Object.assign(user);
+
+        if (!isRegister) {
+            delete updatedUser['email'];
+        }
+
         try {
-            await dispatch(userActions.registerUser({user}));
-            if (!registerError) {
-                navigate('/auth/login');
+            if (isRegister) {
+                await dispatch(userActions.registerUser({user}));
+                if (!registerError) {
+                    navigate('/auth/login');
+                }
+            } else {
+                if (userForUpdate) {
+                    const {_id} = userForUpdate;
+                    await dispatch(userActions.updateById({id: _id, user: updatedUser}));
+                }
             }
             reset();
         } catch (e: any) {
@@ -48,25 +76,33 @@ const RegisterForm: FC = () => {
                 </label>
             </div>
             {errors.age && <span>{errors.age.message}</span>}
+
             <div>
                 <label>Email
-                    <input type={'text'} placeholder={'email  '} {...register('email')}/>
+                    <input type={'text'} placeholder={'email  '} {...register('email')} disabled={!isRegister}/>
                 </label>
             </div>
             {errors.email && <span>{errors.email.message}</span>}
+
             <div>
                 <label>Phone
                     <input type={'text'} placeholder={'phone  '} {...register('phone')}/>
                 </label>
             </div>
             {errors.phone && <span>{errors.phone.message}</span>}
-            <div>
-                <label>Password
-                    <input type={'password'} placeholder={'password'} {...register('password')}/>
-                </label>
-            </div>
+
+            {
+                isRegister &&
+                <div>
+                    <label>Password
+                        <input type={'password'} placeholder={'password'} {...register('password')}
+                               disabled={!isRegister} required={true}/>
+                    </label>
+                </div>
+            }
             {errors.password && <span>{errors.password.message}</span>}
-            <button disabled={!isValid}>Register</button>
+
+            <button disabled={!isValid && isRegister}>{userForUpdate ? 'Save Update' : 'Register'}</button>
 
             <div>
                 <div>{formErrors.name && <div>Error name: {formErrors.name[0]}</div>}</div>

@@ -30,12 +30,15 @@ axiosService.interceptors.response.use(
             isRefreshing = true
             try {
                 const {data} = await authService.refresh(refreshToken);
+
+                console.log('REFRESH');
+
                 const {access_token, refresh_token} = data;
                 localStorage.setItem('access', access_token)
                 localStorage.setItem('refresh', refresh_token)
             } catch (e) {
                 localStorage.clear();
-                history.replace('/login?expSession=true')
+                history.replace('/auth/login?expSession=true')
             }
             isRefreshing = false
             return axiosService.request(error.config)
