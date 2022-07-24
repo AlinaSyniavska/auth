@@ -5,7 +5,7 @@ import './User.css';
 import {useAppDispatch, useAppSelector} from "../../hooks";
 import {userActions} from "../../redux";
 import {Popup} from "../Popup/Popup";
-import {Link, useLocation, useSearchParams} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 
 interface IProps {
     user: IUser,
@@ -16,7 +16,6 @@ const User: FC<IProps> = ({user}) => {
     const [isUserRoot, setUserRoot] = useState(false);
     const idLoginUser = localStorage.getItem('idLoginUser') as string;
 
-    const {page, perPage} = useAppSelector(state => state.userReducer);
     const dispatch = useAppDispatch();
 
     const btnDel = useRef<HTMLButtonElement>(null);
@@ -25,9 +24,7 @@ const User: FC<IProps> = ({user}) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const location = useLocation();
-    console.log(location.search);
-    // const {page: pageState, perPage: perPageState} = location.state as any;
-    // const [query, setQuery] = useSearchParams({page: `${pageState}`, perPage: `${perPageState}`});
+    // console.log(location.search);
 
     const togglePopup = () => {
         setIsOpen(!isOpen);
@@ -57,7 +54,6 @@ const User: FC<IProps> = ({user}) => {
 
             {
                 isUserRoot && <Link to={`${idUser}` + location.search}>
-                {/*isUserRoot && <Link to={`${idUser}`} state={{page, perPage}}>*/}
                     <button ref={btnUpdate} onClick={(e) => {
                         dispatch(userActions.setUserForUpdate({user}));
                         if (null !== btnUpdate.current && null !== btnDel.current) {

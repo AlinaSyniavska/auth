@@ -17,6 +17,7 @@ const RegisterForm: FC = () => {
     const [errorsFromForm, setErrors] = useState<any>({});
     const [isRegister, setIsRegister] = useState(false);
     const {pathname} = useLocation();
+    const location = useLocation();
 
     const navigate = useNavigate();
     const {formErrors, registerError, userForUpdate} = useAppSelector(state => state.userReducer);
@@ -53,6 +54,7 @@ const RegisterForm: FC = () => {
                 if (userForUpdate) {
                     const {_id} = userForUpdate;
                     await dispatch(userActions.updateById({id: _id, user: updatedUser}));
+                    navigate('/users' + location.search);
                 }
             }
             reset();

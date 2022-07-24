@@ -67,13 +67,12 @@ const deleteById = createAsyncThunk<void, { id: String }>(
 
 const updateById = createAsyncThunk<IUser, { id: String, user: IUser }>(
     'userSlice/updateById',
-    async ({id, user}, {dispatch, rejectWithValue}) => {
+    async ({id, user}, {rejectWithValue}) => {
         try {
             const {data} = await userService.update(id, user);
             console.log(data);
 
             return data;
-            // dispatch(updateUser({id, user}));
         } catch (e: any) {
             return rejectWithValue({errorStatus: e.message})
         }
@@ -94,14 +93,9 @@ const userSlice = createSlice({
             state.users.splice(index, 1);
         },
 
-        updateUser: (state, action) => {
-            /*            const index = state.users.findIndex(user => user._id === action.payload.id);
-                        state.users[index] = {...state.users[index], ...action.payload.user};
-                        state.userForUpdate = null;*/
-        },
-
         saveQueryParams: (state, action) => {
             state.page = action.payload.page;
+            state.perPage = action.payload.perPage;
         },
     },
     extraReducers: (builder) => {

@@ -17,7 +17,7 @@ const Users: FC = () => {
 
     useEffect(() => {
         dispatch(userActions.saveQueryParams({page: query.get('page'), perPage: query.get('perPage')}));
-        dispatch(userActions.getAll({page: query.get('page') || '1', perPage: query.get('perPage') || '4'}))
+        dispatch(userActions.getAll({page: query.get('page') || '1', perPage: query.get('perPage') || '5'}))
     }, [dispatch, query]);
 
     return (
